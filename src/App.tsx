@@ -80,11 +80,11 @@ export default function App(){
         <div className="hint" style={{marginTop:12}}>
           <p><strong>How to use:</strong></p>
           <p>• Create/select a signature above</p>
-          <p>• Click anywhere on PDF to place it</p>
-          <p>• Click signature to select (red border + blue dot)</p>
-          <p>• Drag to move, blue dot to resize</p>
-          <p>• Right-click or Delete key to remove</p>
-          <p>• Click empty area to deselect</p>
+          <p>• Tap anywhere on PDF to place it</p>
+          <p>• Tap signature to select (red border + blue dot)</p>
+          <p>• Drag to move, pinch to resize, or drag blue dot</p>
+          <p>• Long press or Delete key to remove</p>
+          <p>• Tap empty area to deselect</p>
         </div>
       </aside>
       <main className="viewer">

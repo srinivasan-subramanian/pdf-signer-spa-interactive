@@ -34,12 +34,16 @@ export async function exportSignedPdf(file: File, placements: Placement[]) {
       cache.set(p.imageDataUrl, img)
     }
     
-    // Convert from canvas coordinates (scaled 1.5x, top-left origin) to PDF coordinates (1x scale, bottom-left origin)
-    const scale = 1.5
-    const pdfX = p.rect.x / scale
-    const pdfY = pageHeight - (p.rect.y + p.rect.h) / scale
-    const pdfW = p.rect.w / scale
-    const pdfH = p.rect.h / scale
+    // Convert from percentage coordinates to PDF coordinates
+    const pdfX = (p.rect.x / 100) * pageWidth
+    const pdfY = pageHeight - ((p.rect.y + p.rect.h) / 100) * pageHeight  // PDF has bottom-left origin
+    const pdfW = (p.rect.w / 100) * pageWidth
+    const pdfH = (p.rect.h / 100) * pageHeight
+    
+    console.log(`PDF Export Debug:`)
+    console.log(`  Page: ${pageWidth.toFixed(1)}x${pageHeight.toFixed(1)}`)
+    console.log(`  Percent: (${p.rect.x.toFixed(1)}%, ${p.rect.y.toFixed(1)}%, ${p.rect.w.toFixed(1)}%, ${p.rect.h.toFixed(1)}%)`)
+    console.log(`  PDF coords: (${pdfX.toFixed(1)}, ${pdfY.toFixed(1)}, ${pdfW.toFixed(1)}, ${pdfH.toFixed(1)})`)
     
     page.drawImage(img, { 
       x: pdfX, 

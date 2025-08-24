@@ -25,13 +25,42 @@ export const SignaturePanel: React.FC = () => {
   useEffect(()=>{
     if (mode !== 'draw') return
     const c = canvasRef.current; if (!c) return
-    const pad = new SignaturePad(c, { penColor: '#111827' })
+    
+    // Mobile-optimized signature pad configuration
+    const isMobile = window.innerWidth <= 768
+    const padOptions = {
+      penColor: '#111827',
+      minWidth: isMobile ? 2 : 1,
+      maxWidth: isMobile ? 4 : 2.5,
+      throttle: isMobile ? 16 : 0, // Throttle for better performance on mobile
+      minDistance: isMobile ? 5 : 2,
+      velocityFilterWeight: isMobile ? 0.7 : 0.7,
+      dotSize: 0 // Disable dots for smoother lines
+    }
+    
+    const pad = new SignaturePad(c, padOptions)
     padRef.current = pad
     const ratio = Math.max(window.devicePixelRatio || 1, 1)
-    c.width = 320 * ratio; c.height = 140 * ratio
+    
+    // Responsive canvas sizing
+    const canvasWidth = Math.min(320, window.innerWidth - 40)
+    const canvasHeight = 140
+    
+    c.width = canvasWidth * ratio
+    c.height = canvasHeight * ratio
     c.getContext('2d')!.scale(ratio, ratio)
-    c.style.width = '320px'; c.style.height = '140px'
-    return ()=> pad.off()
+    c.style.width = canvasWidth + 'px'
+    c.style.height = canvasHeight + 'px'
+    
+    // Prevent scrolling when touching the canvas
+    c.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false })
+    c.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false })
+    
+    return ()=> {
+      pad.off()
+      c.removeEventListener('touchstart', (e) => e.preventDefault())
+      c.removeEventListener('touchmove', (e) => e.preventDefault())
+    }
   }, [mode])
 
   const useThis = () => {

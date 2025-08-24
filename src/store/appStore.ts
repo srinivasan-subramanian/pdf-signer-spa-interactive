@@ -8,7 +8,8 @@ const isValidDataURL = (dataUrl: string): boolean => {
 
 export type Size = { width:number, height:number }
 export type Rect = { x:number, y:number, w:number, h:number }
-export type Placement = { id:string, pageIndex:number, rect:Rect, imageDataUrl:string }
+export type PercentRect = { x:number, y:number, w:number, h:number } // All values as percentages (0-100)
+export type Placement = { id:string, pageIndex:number, rect:PercentRect, imageDataUrl:string }
 
 type S = {
   pdfFile: File | null
@@ -23,8 +24,8 @@ type S = {
   setPages: (canvases: HTMLCanvasElement[], sizes: Size[]) => void
   setPageSizes: (sizes: Size[]) => void
   setCurrentSignature: (dataUrl: string | null) => void
-  addPlacement: (pageIndex:number, rect:Rect, imageDataUrl:string) => void
-  updatePlacement: (id:string, rect:Rect) => void
+  addPlacement: (pageIndex:number, rect:PercentRect, imageDataUrl:string) => void
+  updatePlacement: (id:string, rect:PercentRect) => void
   removePlacement: (id:string) => void
   clearAllPlacements: () => void
   exportAll: () => void
@@ -60,8 +61,8 @@ export const useAppStore = create<S>((set, get)=> ({
       console.error('Invalid page index')
       return s
     }
-    if (rect.w <= 0 || rect.h <= 0 || rect.x < 0 || rect.y < 0) {
-      console.error('Invalid rectangle dimensions')
+    if (rect.w <= 0 || rect.h <= 0 || rect.x < 0 || rect.y < 0 || rect.x > 100 || rect.y > 100 || rect.w > 100 || rect.h > 100) {
+      console.error('Invalid percentage rectangle dimensions (should be 0-100)')
       return s
     }
 
