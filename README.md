@@ -18,4 +18,4 @@ npm run build
 aws s3 sync dist/ s3://YOUR_BUCKET --delete
 ```
 
-<video src="demo.mp4" width="400" autoplay loop muted></video>
+![Demo](demo.gif)
