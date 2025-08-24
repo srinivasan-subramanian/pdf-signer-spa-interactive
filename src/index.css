@@ -1,0 +1,21 @@
+:root { --bg: #fff; --fg: #111827; --ring: #e5e7eb; --muted:#6b7280; }
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color: var(--fg); background: var(--bg); }
+.app { display:flex; height:100vh; }
+.sidebar { width: 300px; border-right: 1px solid var(--ring); padding: 12px; overflow:auto; }
+.viewer { flex:1; display:flex; flex-direction:column; min-width:0; }
+.toolbar { display:flex; gap:8px; padding:10px; border-bottom:1px solid var(--ring); align-items:center; }
+.dropzone { border: 2px dashed var(--ring); padding: 20px; text-align:center; color: var(--muted); border-radius: 8px; cursor:pointer; }
+.page-wrap { position:relative; margin: 12px auto; }
+canvas.pdf-page { display:block; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.sig-overlay { position:absolute; outline:2px dashed #3b82f6; }
+.sig-img { position:absolute; cursor:move; user-select:none; border: 2px solid transparent; transition: border-color 0.2s; }
+.sig-img:hover { border-color: #3b82f6; }
+.sig-img.selected { border-color: #ef4444; box-shadow: 0 0 0 1px #ef4444; }
+.sig-handle { position:absolute; width:16px; height:16px; background:#3b82f6; border:2px solid #fff; border-radius:50%; cursor:nwse-resize; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 1000; }
+.sig-handle:hover { background:#1d4ed8; }
+button { padding:8px 12px; border:1px solid var(--ring); border-radius:8px; background:#fff; cursor:pointer; }
+button.primary { background:#111827; color:#fff; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.hint { color: var(--muted); font-size: 12px; }
