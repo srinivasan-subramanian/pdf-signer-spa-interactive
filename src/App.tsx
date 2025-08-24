@@ -7,6 +7,14 @@ export default function App(){
   const fileInput = useRef<HTMLInputElement>(null)
   const { loadFile, clearAll, hasDoc, exportAll, placements } = useAppStore()
 
+  const handleClearAll = () => {
+    clearAll()
+    // Clear the file input value to allow re-selecting the same file
+    if (fileInput.current) {
+      fileInput.current.value = ''
+    }
+  }
+
   const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]
     if (!f) return
@@ -60,7 +68,7 @@ export default function App(){
           <input ref={fileInput} type="file" accept="application/pdf" onChange={handlePdfUpload} />
         </div>
         <div style={{marginTop:12}} className="row">
-          <button onClick={clearAll}>Clear Session</button>
+          <button onClick={handleClearAll}>Clear Session</button>
           <button className="primary" onClick={exportAll} disabled={!hasDoc}>Download Signed PDF</button>
         </div>
         {placements.length > 0 && (

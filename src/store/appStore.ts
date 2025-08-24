@@ -26,6 +26,7 @@ type S = {
   addPlacement: (pageIndex:number, rect:Rect, imageDataUrl:string) => void
   updatePlacement: (id:string, rect:Rect) => void
   removePlacement: (id:string) => void
+  clearAllPlacements: () => void
   exportAll: () => void
 }
 
@@ -69,6 +70,7 @@ export const useAppStore = create<S>((set, get)=> ({
   }),
   updatePlacement: (id, rect) => set((s)=> ({ placements: s.placements.map(p => p.id === id ? { ...p, rect } : p) })),
   removePlacement: (id) => set((s)=> ({ placements: s.placements.filter(p => p.id !== id) })),
+  clearAllPlacements: () => set({ placements: [], currentSignature: null }),
 
   exportAll: async () => {
     const { pdfFile, placements } = get()

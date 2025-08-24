@@ -7,7 +7,7 @@ export const SignaturePanel: React.FC = () => {
   const [mode, setMode] = useState<'draw'|'type'|'upload'>('draw')
   const [typed, setTyped] = useState('')
   const padRef = useRef<SignaturePad | null>(null)
-  const { setCurrentSignature, currentSignature } = useAppStore()
+  const { setCurrentSignature, currentSignature, clearAllPlacements } = useAppStore()
 
   // Handle real-time input filtering
   const handleTypedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +172,7 @@ export const SignaturePanel: React.FC = () => {
       {currentSignature && (
         <div style={{marginTop:8, padding:8, background:'#f0f9ff', borderRadius:4, fontSize:12, color:'#0369a1', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
           <span>✓ Signature ready! Click on the PDF to place it.</span>
-          <button style={{fontSize:10, padding:'2px 6px'}} onClick={() => setCurrentSignature(null)}>Clear</button>
+          <button style={{fontSize:10, padding:'2px 6px'}} onClick={() => clearAllPlacements()}>Clear</button>
         </div>
       )}
       {mode==='draw' && (

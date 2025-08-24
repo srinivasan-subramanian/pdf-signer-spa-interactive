@@ -25,7 +25,14 @@ export const PdfViewer: React.FC = () => {
 
   useEffect(()=>{
     (async () => {
-      if (!pdfFile || !containerRef.current) return
+      if (!containerRef.current) return
+      
+      if (!pdfFile) {
+        // Clear the container when no PDF is loaded
+        containerRef.current.innerHTML = ''
+        return
+      }
+      
       const { canvases, sizes } = await renderPdfToCanvases(pdfFile)
       setPages(canvases, sizes)
       containerRef.current.innerHTML = ''
