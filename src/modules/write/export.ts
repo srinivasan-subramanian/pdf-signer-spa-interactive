@@ -14,8 +14,9 @@ const sanitizeFilename = (filename: string): string => {
 }
 
 export async function exportSignedPdf(file: File, placements: Placement[]) {
-  const bytes = new Uint8Array(await file.arrayBuffer())
-  const pdfDoc = await PDFDocument.load(bytes)
+  try {
+    const bytes = new Uint8Array(await file.arrayBuffer())
+    const pdfDoc = await PDFDocument.load(bytes)
 
   // Embed each signature image at its page/rect
   const cache = new Map<string, any>()
@@ -64,8 +65,12 @@ export async function exportSignedPdf(file: File, placements: Placement[]) {
   const sanitizedName = sanitizeFilename(originalName)
   a.download = `${sanitizedName}-signed.pdf`
   
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('PDF export error:', error)
+    throw new Error('Failed to export PDF. The file may be corrupted or incompatible.')
+  }
 }

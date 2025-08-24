@@ -142,11 +142,12 @@ export const SignaturePanel: React.FC = () => {
     return sanitized
   }
 
-  // Helper function to decode HTML entities
+  // Helper function to safely decode HTML entities without XSS risk
   const decodeHtmlEntities = (text: string): string => {
-    const textarea = document.createElement('textarea')
-    textarea.innerHTML = text
-    return textarea.value
+    // Use DOMParser for safe HTML entity decoding without script execution
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(`<!doctype html><body>${text}`, 'text/html')
+    return doc.body.textContent || ''
   }
 
   const onUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

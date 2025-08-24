@@ -18,6 +18,7 @@ type S = {
   placements: Placement[]
   currentSignature: string | null
   hasDoc: boolean
+  lastPlacementTime: number
 
   loadFile: (f: File) => void
   clearAll: () => void
@@ -38,6 +39,7 @@ export const useAppStore = create<S>((set, get)=> ({
   placements: [],
   currentSignature: null,
   hasDoc: false,
+  lastPlacementTime: 0,
 
   loadFile: (f) => set({ pdfFile: f, hasDoc: true, pages: [], pageSizes: [], placements: [] }),
   clearAll: () => set({ pdfFile: null, hasDoc: false, pages: [], pageSizes: [], placements: [], currentSignature: null }),
@@ -52,6 +54,13 @@ export const useAppStore = create<S>((set, get)=> ({
     set({ currentSignature: d })
   },
   addPlacement: (pageIndex, rect, imageDataUrl) => set((s)=> {
+    // Rate limiting: prevent rapid placement (max 1 per 100ms)
+    const now = Date.now()
+    if (now - s.lastPlacementTime < 100) {
+      console.warn('Rate limit: Placement requests too frequent')
+      return s
+    }
+
     // Validate inputs
     if (!isValidDataURL(imageDataUrl)) {
       console.error('Invalid image data URL')
@@ -65,9 +74,20 @@ export const useAppStore = create<S>((set, get)=> ({
       console.error('Invalid percentage rectangle dimensions (should be 0-100)')
       return s
     }
+    // Additional security: prevent extremely small signatures that could be used for tracking
+    if (rect.w < 1 || rect.h < 0.5) {
+      console.error('Signature too small - minimum size is 1% x 0.5%')
+      return s
+    }
+    // Prevent excessive number of signatures (max 50 per document)
+    if (s.placements.length >= 50) {
+      console.error('Maximum signature limit reached (50)')
+      alert('Maximum signature limit reached. Please remove some signatures before adding more.')
+      return s
+    }
 
     const newPlacement = { id: crypto.randomUUID(), pageIndex, rect, imageDataUrl }
-    return { placements: [...s.placements, newPlacement] }
+    return { placements: [...s.placements, newPlacement], lastPlacementTime: now }
   }),
   updatePlacement: (id, rect) => set((s)=> ({ placements: s.placements.map(p => p.id === id ? { ...p, rect } : p) })),
   removePlacement: (id) => set((s)=> ({ placements: s.placements.filter(p => p.id !== id) })),

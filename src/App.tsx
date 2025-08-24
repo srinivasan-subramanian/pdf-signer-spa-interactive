@@ -52,6 +52,7 @@ export default function App(){
       loadFile(f)
     }
     reader.onerror = () => {
+      console.error('PDF file read error')
       alert('Failed to read PDF file. Please try again.')
       e.target.value = ''
     }
