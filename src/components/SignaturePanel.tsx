@@ -239,6 +239,22 @@ export const SignaturePanel: React.FC = () => {
       {mode==='upload' && (
         <div style={{marginTop:8}}>
           <input type="file" accept="image/*" onChange={onUpload} />
+          {currentSignature && (
+            <div style={{marginTop:8, textAlign:'center'}}>
+              <div style={{marginBottom:4, fontSize:12, color:'#6b7280'}}>Preview:</div>
+              <img 
+                src={currentSignature} 
+                alt="Signature preview" 
+                style={{
+                  maxWidth: '200px',
+                  maxHeight: '80px',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '4px',
+                  backgroundColor: '#f9fafb'
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

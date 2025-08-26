@@ -55,7 +55,8 @@ export async function exportSignedPdf(file: File, placements: Placement[]) {
   }
 
   const out = await pdfDoc.save()
-  const blob = new Blob([out], { type: 'application/pdf' })
+  const arrayBuffer = new Uint8Array(out).buffer
+  const blob = new Blob([arrayBuffer], { type: 'application/pdf' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

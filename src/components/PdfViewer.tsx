@@ -311,7 +311,7 @@ export const PdfViewer: React.FC = () => {
         })
         
         // Touch handling for signatures (long press, drag, select, pinch-to-resize)
-        let longPressTimer: NodeJS.Timeout | null = null
+        let longPressTimer: number | null = null
         let isLongPress = false
         let touchMoveStarted = false
         let initialTouchX = 0
