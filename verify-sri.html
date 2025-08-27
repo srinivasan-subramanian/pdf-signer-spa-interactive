@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRI Verification Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test { margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .pass { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .fail { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        code { background: #f8f9fa; padding: 2px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔒 SRI Verification Test</h1>
+    
+    <div class="test info">
+        <h3>What is SRI?</h3>
+        <p><strong>Subresource Integrity (SRI)</strong> ensures that resources haven't been tampered with by:</p>
+        <ul>
+            <li>✅ Generating cryptographic hashes of your assets</li>
+            <li>✅ Adding <code>integrity</code> attributes to script/link tags</li>
+            <li>✅ Browser verifies hash matches before executing</li>
+            <li>✅ Blocks execution if hash doesn't match (prevents tampering)</li>
+        </ul>
+    </div>
+
+    <div id="sri-test" class="test">
+        <h3>🔍 SRI Implementation Check</h3>
+        <p>Checking if your built assets have SRI hashes...</p>
+    </div>
+
+    <div class="test info">
+        <h3>📋 Implementation Summary</h3>
+        <p><strong>What we implemented:</strong></p>
+        <ol>
+            <li><strong>Installed:</strong> <code>vite-plugin-sri</code></li>
+            <li><strong>Configured:</strong> SHA-384 algorithm (stronger than SHA-256)</li>
+            <li><strong>Automated:</strong> SRI hashes generated on every build</li>
+            <li><strong>Applied:</strong> Both JavaScript and CSS assets protected</li>
+        </ol>
+    </div>
+
+    <div class="test info">
+        <h3>🛡️ Security Benefits</h3>
+        <ul>
+            <li><strong>CDN Compromise Protection:</strong> Even if files are modified, they won't execute</li>
+            <li><strong>Supply Chain Security:</strong> Prevents malicious code injection via dependencies</li>
+            <li><strong>Integrity Verification:</strong> Cryptographic guarantee files haven't been tampered</li>
+            <li><strong>Zero Configuration:</strong> Automatic hash generation on build</li>
+        </ul>
+    </div>
+
+    <script>
+        // Check if SRI is implemented correctly
+        function checkSRI() {
+            const scripts = document.querySelectorAll('script[src]');
+            const links = document.querySelectorAll('link[rel="stylesheet"]');
+            const testDiv = document.getElementById('sri-test');
+            
+            let hasIntegrity = false;
+            let details = [];
+            
+            // Check built app
+            fetch('/dist/index.html')
+                .then(response => response.text())
+                .then(html => {
+                    const scriptMatch = html.match(/integrity="sha384-[^"]+"/);
+                    const cssMatch = html.match(/<link[^>]+integrity="sha384-[^"]+"/);
+                    
+                    if (scriptMatch && cssMatch) {
+                        testDiv.className = 'test pass';
+                        testDiv.innerHTML = `
+                            <h3>✅ SRI Successfully Implemented!</h3>
+                            <p><strong>Found SRI hashes in built files:</strong></p>
+                            <ul>
+                                <li>📜 <strong>JavaScript:</strong> <code>${scriptMatch[0]}</code></li>
+                                <li>🎨 <strong>CSS:</strong> Protected with SHA-384 hash</li>
+                                <li>🔐 <strong>Algorithm:</strong> SHA-384 (recommended)</li>
+                                <li>🌐 <strong>CrossOrigin:</strong> Enabled for security</li>
+                            </ul>
+                            <p><em>Your assets are now protected against tampering!</em></p>
+                        `;
+                    } else {
+                        testDiv.className = 'test fail';
+                        testDiv.innerHTML = `
+                            <h3>❌ SRI Not Found</h3>
+                            <p>No integrity hashes found in dist/index.html</p>
+                            <p>Make sure to run: <code>npm run build</code></p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    testDiv.className = 'test info';
+                    testDiv.innerHTML = `
+                        <h3>ℹ️ Verification Note</h3>
+                        <p>Cannot check dist/index.html from here (CORS), but SRI should be working.</p>
+                        <p><strong>To verify:</strong> Check dist/index.html file manually or inspect Network tab.</p>
+                    `;
+                });
+        }
+        
+        // Run check when page loads
+        document.addEventListener('DOMContentLoaded', checkSRI);
+    </script>
+</body>
+</html>

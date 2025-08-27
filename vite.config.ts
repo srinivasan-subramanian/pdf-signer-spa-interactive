@@ -1,8 +1,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import sri from 'vite-plugin-sri'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    sri({
+      algorithms: ['sha384'], // Use SHA-384 for better security
+      hashAttribute: 'integrity',
+      crossOrigin: true
+    })
+  ],
   server: {
     headers: {
       // Security headers for development server
