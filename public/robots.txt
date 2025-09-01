@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location (update with your actual domain)
+# Sitemap: https://yourdomain.com/sitemap.xml
+
+# Allow all pages to be crawled
+# This PDF signing tool is privacy-focused and secure
